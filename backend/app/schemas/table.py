@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from app.models.enums import TableStatus
+from app.db.models import TableStatus
 
 
 class TableCreate(BaseModel):

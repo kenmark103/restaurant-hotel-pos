@@ -1,49 +1,48 @@
+
 services:
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_DB: pos_dev
       POSTGRES_USER: pos_user
       POSTGRES_PASSWORD: devpassword123
+      POSTGRES_DB: pos_dev
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U pos_user -d pos_dev"]
-      interval: 10s
+      interval: 5s
       timeout: 5s
       retries: 5
 
   redis:
     image: redis:7-alpine
+    ports:
+      - "6379:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
+      interval: 5s
+      timeout: 3s
       retries: 5
 
-  backend:
-    build: ./backend
-    volumes:
-      - ./backend:/app
-    env_file: .env
-    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+  api:
+    build:
+      context: ./backend          # ← THIS WAS THE FIX
+      dockerfile: Dockerfile      # ← points to backend/Dockerfile
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     ports:
       - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./backend:/app            # ← mount ONLY backend code for live reload
+      - /tmp/print_jobs:/tmp/print_jobs
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
-
-  frontend:
-    build: ./frontend
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    ports:
-      - "5173:5173"
-    depends_on:
-      - backend
 
 volumes:
   postgres_data:
