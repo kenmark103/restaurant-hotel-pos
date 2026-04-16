@@ -130,7 +130,7 @@ export const settingsApi = {
 
   getProductConfiguration: () =>
     apiClient
-      .get<import("../schema").components["schemas"]["ProductConfigurationResponse"]>(
+      .get<import("../src/schema").components["schemas"]["ProductConfigurationResponse"]>(
         "/api/v1/settings/product/configuration"
       )
       .then((r) => r.data),
@@ -175,23 +175,23 @@ export const settingsApi = {
 export const staffApi = {
   listStaff: (params?: { branch_id?: number; role?: string }) =>
     apiClient
-      .get<import("../schema").components["schemas"]["StaffRead"][]>(
+      .get<import("../src/schema").components["schemas"]["StaffRead"][]>(
         "/api/v1/staff",
         { params }
       )
       .then((r) => r.data),
 
   inviteStaff: (
-    body: import("../schema").components["schemas"]["StaffInviteRequest"]
+    body: import("../src/schema").components["schemas"]["StaffInviteRequest"]
   ) =>
     apiClient.post<unknown>("/api/v1/staff", body).then((r) => r.data),
 
   updateStaff: (
     staffId: number,
-    body: import("../schema").components["schemas"]["StaffUpdateRequest"]
+    body: import("../src/schema").components["schemas"]["StaffUpdateRequest"]
   ) =>
     apiClient
-      .put<import("../schema").components["schemas"]["StaffRead"]>(
+      .put<import("../src/schema").components["schemas"]["StaffRead"]>(
         `/api/v1/staff/${staffId}`,
         body
       )
@@ -204,7 +204,7 @@ export const staffApi = {
 
   setPin: (
     staffId: number,
-    body: import("../schema").components["schemas"]["AdminSetPinRequest"]
+    body: import("../src/schema").components["schemas"]["AdminSetPinRequest"]
   ) =>
     apiClient
       .post<void>(`/api/v1/staff/${staffId}/pin`, body)

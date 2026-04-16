@@ -13,13 +13,29 @@ const PinPadScreen      = lazy(() => import("@/features/auth/PinPadScreen"));
 const EmailLoginScreen  = lazy(() => import("@/features/auth/EmailLoginScreen"));
 const FloorViewScreen   = lazy(() => import("@/features/pos/FloorViewScreen"));
 const OrderScreen       = lazy(() => import("@/features/pos/OrderScreen"));
-const KdsScreen         = lazy(() => import("@/features/kitchen/KdsScreen"));
-const MenuScreen        = lazy(() => import("@/features/menu/MenuScreen"));
-const InventoryScreen   = lazy(() => import("@/features/inventory/InventoryScreen"));
-const ReportsScreen     = lazy(() => import("@/features/reports/ReportsScreen"));
-const SettingsScreen    = lazy(() => import("@/features/settings/SettingsScreen"));
-const StaffScreen       = lazy(() => import("@/features/staff/StaffScreen"));
-const NotFoundScreen    = lazy(() => import("@/features/shared/NotFoundScreen"));
+
+// Week 3+ screens — stub until implemented
+const KdsScreen       = lazy(() =>
+  import("@/features/shared/stubs").then((m) => ({ default: m.KdsScreen }))
+);
+const MenuScreen      = lazy(() =>
+  import("@/features/shared/stubs").then((m) => ({ default: m.MenuScreen }))
+);
+const InventoryScreen = lazy(() =>
+  import("@/features/shared/stubs").then((m) => ({ default: m.InventoryScreen }))
+);
+const ReportsScreen   = lazy(() =>
+  import("@/features/shared/stubs").then((m) => ({ default: m.ReportsScreen }))
+);
+const SettingsScreen  = lazy(() =>
+  import("@/features/shared/stubs").then((m) => ({ default: m.SettingsScreen }))
+);
+const StaffScreen     = lazy(() =>
+  import("@/features/shared/stubs").then((m) => ({ default: m.StaffScreen }))
+);
+const NotFoundScreen  = lazy(() =>
+  import("@/features/shared/stubs").then((m) => ({ default: m.NotFoundScreen }))
+);
 
 // ─── Auth guard helper ───────────────────────────────────────────────────────
 function requireAuth() {

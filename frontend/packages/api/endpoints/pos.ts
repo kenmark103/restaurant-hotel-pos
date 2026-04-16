@@ -1,5 +1,5 @@
 import { apiClient } from "../src/client";
-import type { components } from "@restaurantos/schemas";
+import type { components } from "../src/schema";
 
 type OrderRead = components["schemas"]["OrderRead"];
 type CreateOrderRequest = components["schemas"]["CreateOrderRequest"];
