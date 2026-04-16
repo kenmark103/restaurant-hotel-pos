@@ -1,0 +1,23 @@
+FROM node:20-alpine
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@9.0.0 --activate
+
+WORKDIR /workspace
+
+# Copy manifests first for layer caching
+COPY package.json pnpm-workspace.yaml turbo.json ./
+COPY packages/api/package.json ./packages/api/
+COPY packages/stores/package.json ./packages/stores/
+COPY apps/web/package.json ./apps/web/
+
+# Install deps
+RUN pnpm install --frozen-lockfile || pnpm install
+
+# Copy source
+COPY . .
+
+EXPOSE 5173
+
+# Dev server — Vite binds to 0.0.0.0 so Docker can expose it
+CMD ["pnpm", "--filter", "@restaurantos/web", "dev", "--host", "0.0.0.0"]

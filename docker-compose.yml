@@ -1,4 +1,3 @@
-
 services:
   db:
     image: postgres:16-alpine
@@ -28,21 +27,41 @@ services:
 
   api:
     build:
-      context: ./backend          # ← THIS WAS THE FIX
-      dockerfile: Dockerfile      # ← points to backend/Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     ports:
       - "8000:8000"
     env_file:
       - .env
     volumes:
-      - ./backend:/app            # ← mount ONLY backend code for live reload
+      - ./backend:/app
       - /tmp/print_jobs:/tmp/print_jobs
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
+
+  # ── Frontend (Vite dev server) ─────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend          # ← folder where you place the frontend zip contents
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000
+      - VITE_WS_URL=ws://localhost:8000
+      - VITE_APP_ENV=development
+    volumes:
+      # Live-reload: mount source but NOT node_modules (use container's)
+      - ./frontend/apps:/workspace/apps
+      - ./frontend/packages:/workspace/packages
+      - /workspace/node_modules          # anonymous volume — keeps container node_modules
+      - /workspace/apps/web/node_modules
+    depends_on:
+      - api
 
 volumes:
   postgres_data:
